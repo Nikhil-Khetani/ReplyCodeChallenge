@@ -1,6 +1,7 @@
 import numpy as np
 import math
 
+
 class Building():
     def __init__(self, x, y, latency, connection_weight):
         self.x= x
@@ -56,7 +57,7 @@ def r(b):
     
     return array
 
-def s(a=None, b):
+def s(b, a=None):
     
     global A_list
     
@@ -64,40 +65,44 @@ def s(a=None, b):
         if len(r(b)) == 0:
             return 0
         else:
-            return s(c(b), b)
+            return s(b, c(b))
     else:
         return b.connection_weight*a.connection_speed - b.latency*dist(a, b)
     
 def c(b):
     array = r(b)
     a_max = array[0]
-    s_max = s(a_max, b)
+    s_max = s(b, a_max)
     for a in array:
-        s_temp = s(a, b)
+        s_temp = s(b, a)
         if s_temp > s_max:
             s_max = s_temp
             a_max = a
     
     return a_max
 
+def optimise():
+    return
 
 if __name__ == "__main__":
 
     f = open("data_scenarios_a_example_in.txt", "r")
-    H, W= f.readline().rsplit()
-    N, M, R = f.readline().rsplit()
-    global H = int(H)
-    global W = int(W)
-    global N = int(N)
-    global M = int(M)
-    global R = int(R)
-    global B_list = []
-    global A_list = []
+    tempH, tempW= f.readline().rsplit()
+    tempN, tempM, tempR = f.readline().rsplit()
+    H = int(tempH)
+    W = int(tempW)
+    N = int(tempN)
+    M = int(tempM)
+    R = int(tempR)
+    B_list = []
+    A_list = []
     for i in range(N):
         x, y, latency, connection_weight = f.readline().rsplit()
         B_list.append(Building(x,y,latency, connection_weight))
     for i in range(M):
         Ar,Ac = f.readline().rsplit()
         A_list.append(Antenna(Ar,Ac))
+
+    
 
         
