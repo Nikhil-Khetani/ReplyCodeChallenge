@@ -9,14 +9,16 @@ class Grid(object):
         self.A_list = A_list 
         self.B_list = B_list
         self.Space = {}
-        for j in range(1, H+1):
-            for i in range(1, W+1):
-                self.Space[str(i) + ',' + str(j)] = {}
+        for j in range(0, H):
+            for i in range(0, W):
+                self.Space[str(i) + ',' + str(j)] = {'a':None,
+                                                     'b':None}
     
     def get_spot(self, i, j):
         return self.Space[str(i) + ',' + str(j)]
     
     def set_spot(self, i, j, a=None, b=None):
+        print(self.Space.keys())
         if a==None and b==None:
             pass
         elif b==None:
@@ -57,9 +59,9 @@ class Antenna(object):
 def printOutput():
     global A_list
     f = open("output.txt","w")
-    f.write(str(len(A_list)))
+    f.write(str(len(A_list))+"\n")
     for i in range(len(A_list)):
-        f.write("{} {} {}".format(i,A_list[i].x,A_list[i].y))
+        f.write("{} {} {}\n".format(i,A_list[i].x,A_list[i].y))
     return 0
   
 def dist(a, b):
@@ -137,7 +139,7 @@ def optimise():
 if __name__ == "__main__":
 
     f = open("data_scenarios_a_example_in.txt", "r")
-    tempH, tempW= f.readline().rsplit()
+    tempW, tempH= f.readline().rsplit()
     tempN, tempM, tempR = f.readline().rsplit()
     H = int(tempH)
     W = int(tempW)
