@@ -1,27 +1,24 @@
 import numpy as np
 import math
 
-def reward(b):
-    global A_list
+def reward():
     global B_list
-    global N
     global R
     
     for b in B_list:
-        if len(r(b) == 0:
+        if len(r(b) == 0):
             return 0
     return R
 
 def score():
     global B_list
-    global N
 
-    sum = 0
+    result = 0
 
-    for i in range(0,N):
-       sum += s(B_list[i])
+    for b in B_list:
+       result += s(b)
 
-    return sum + reward
+    return result + reward()
 
 def r(b):
     
