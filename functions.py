@@ -15,18 +15,25 @@ class Antenna():
         self.x = None
         self.y = None
         
+def printOutput(antenna_list):
+    f = open("output.txt","w")
+    f.write(len(antenna_list))
+    for i in range(len(antenna_list)):
+        f.write("{} {} {}".format(i,antenna_list[i].x,antenna_list[i].y))
+    return 0
+  
 def dist(a, b):
-    
     return np.abs(a.x - b.x) + np.abs(b.x - b.y)
 
 def reward():
     global B_list
     global R
-    
+   
     for b in B_list:
         if len(r(b) == 0):
             return 0
     return R
+
 
 def score():
     global B_list
@@ -92,7 +99,5 @@ if __name__ == "__main__":
     for i in range(M):
         Ar,Ac = f.readline().rsplit()
         A_list.append(Antenna(Ar,Ac))
-#print([i.latency for i in building_list ])
 
-
-
+        
