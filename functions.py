@@ -1,5 +1,6 @@
 import numpy as np
 import math
+import random
 
 class Grid(object):
     def __init__(self, H, W, A_list, B_list):
@@ -48,15 +49,21 @@ class Antenna(object):
         self.x = x
         self.y = y
         self.City.set_spot(x, y, a=self)
+
+    def __repr__(self):
+        return "{} {} {} {}".format(self.x,self.y,self.range,self.connection_speed)
+
         
-def printOutput(antenna_list):
+def printOutput():
+    global A_list
     f = open("output.txt","w")
-    f.write(len(antenna_list))
-    for i in range(len(antenna_list)):
-        f.write("{} {} {}".format(i,antenna_list[i].x,antenna_list[i].y))
+    f.write(str(len(A_list)))
+    for i in range(len(A_list)):
+        f.write("{} {} {}".format(i,A_list[i].x,A_list[i].y))
     return 0
   
 def dist(a, b):
+
     return np.abs(a.x - b.x) + np.abs(b.x - b.y)
 
 def reward():
@@ -64,7 +71,7 @@ def reward():
     global R
    
     for b in B_list:
-        if len(r(b) == 0):
+        if len(r(b)) == 0:
             return 0
     return R
 
@@ -115,7 +122,17 @@ def c(b):
     return a_max
 
 def optimise():
-    return
+    global A_list
+    global M
+    global W
+    global H
+    for i in range(M):
+        A_list[i].x = random.randint(0,W)
+        A_list[i].y = random.randint(0,H)
+    print(A_list)
+    pass
+        
+
 
 if __name__ == "__main__":
 
@@ -132,12 +149,13 @@ if __name__ == "__main__":
     City = Grid(H, W, A_list, B_list)
     for i in range(N):
         x, y, latency, connection_weight = f.readline().rsplit()
-        B_list.append(Building(x,y,latency, connection_weight, City))
+        B_list.append(Building(int(x),int(y),float(latency), float(connection_weight), City))
     for i in range(M):
         Ar,Ac = f.readline().rsplit()
-        A_list.append(Antenna(Ar,Ac, City))
-        
-    
+        A_list.append(Antenna(float(Ar),float(Ac), City))
+    optimise()
+    print(score())
+    printOutput()
 
     
 
