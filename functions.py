@@ -1,20 +1,53 @@
 import numpy as np
 import math
 
+class Grid(object):
+    def __init__(self, H, W, A_list, B_list):
+        self.H = H
+        self.W = W
+        self.A_list = A_list 
+        self.B_list = B_list
+        self.Space = {}
+        for j in range(1, H+1):
+            for i in range(1, W+1):
+                self.Space[str(i) + ',' + str(j)] = {}
+    
+    def get_spot(self, i, j):
+        return self.Space[str(i) + ',' + str(j)]
+    
+    def set_spot(self, i, j, a=None, b=None):
+        if a==None and b==None:
+            pass
+        elif b==None:
+            self.Space[str(i) + ',' + str(j)]['a'] = a
+        else:
+            self.Space[str(i) + ',' + str(j)]['b'] = b
 
-class Building():
-    def __init__(self, x, y, latency, connection_weight):
+
+class Building(object):
+    
+
+    def __init__(self, x, y, latency, connection_weight, City):
         self.x= x
         self.y = y
+        self.City = City
+        self.City.set_spot(x, y, b=self)
         self.latency = latency
         self.connection_weight = connection_weight
 
-class Antenna():
-    def __init__(self, range, connection_speed):
+class Antenna(object):
+    
+    def __init__(self, range, connection_speed, City):
         self.range = range
         self.connection_speed = connection_speed
         self.x = None
         self.y = None
+        self.City = City
+    
+    def set_coords(self, x, y):
+        self.x = x
+        self.y = y
+        self.City.set_spot(x, y, a=self)
         
 def printOutput(antenna_list):
     f = open("output.txt","w")
@@ -96,12 +129,15 @@ if __name__ == "__main__":
     R = int(tempR)
     B_list = []
     A_list = []
+    City = Grid(H, W, A_list, B_list)
     for i in range(N):
         x, y, latency, connection_weight = f.readline().rsplit()
-        B_list.append(Building(x,y,latency, connection_weight))
+        B_list.append(Building(x,y,latency, connection_weight, City))
     for i in range(M):
         Ar,Ac = f.readline().rsplit()
-        A_list.append(Antenna(Ar,Ac))
+        A_list.append(Antenna(Ar,Ac, City))
+        
+    
 
     
 
