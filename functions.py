@@ -1,7 +1,8 @@
 import numpy as np
 import math
 import random
-
+import copy
+'''
 class Grid(object):
     def __init__(self, H, W, A_list, B_list):
         self.H = H
@@ -25,32 +26,28 @@ class Grid(object):
             self.Space[str(i) + ',' + str(j)]['a'] = a
         else:
             self.Space[str(i) + ',' + str(j)]['b'] = b
-
+'''
 
 class Building(object):
     
 
-    def __init__(self, x, y, latency, connection_weight, City):
+    def __init__(self, x, y, latency, connection_weight):
         self.x= x
         self.y = y
-        self.City = City
-        self.City.set_spot(x, y, b=self)
         self.latency = latency
         self.connection_weight = connection_weight
 
 class Antenna(object):
     
-    def __init__(self, range, connection_speed, City):
+    def __init__(self, range, connection_speed):
         self.range = range
         self.connection_speed = connection_speed
         self.x = None
         self.y = None
-        self.City = City
     
     def set_coords(self, x, y):
         self.x = x
         self.y = y
-        self.City.set_spot(x, y, a=self)
 
     def __repr__(self):
         return "{} {} {} {}".format(self.x,self.y,self.range,self.connection_speed)
@@ -128,9 +125,32 @@ def optimise():
     global M
     global W
     global H
-    for i in range(M):
-        A_list[i].x = random.randint(0,W)
-        A_list[i].y = random.randint(0,H)
+
+
+    old_score = 0
+    oldpositions = []
+    for k in range(1000):
+        i=0
+        positions = []
+        while i<M:
+            xpos = random.randint(0,W)
+            ypos = random.randint(0,H)
+            if ((xpos,ypos) not in positions):
+                A_list[i].set_coords(xpos,ypos)
+                positions.append((xpos,ypos))
+                i+=1
+        print(score())
+        if score()>=old_score:
+            old_score = score()
+            oldpositions = positions
+    for i in range(len(oldpositions)):
+        A_list[i].set_coords(oldpositions[i][0],oldpositions[i][1])
+        
+    
+
+
+
+
     print(A_list)
     pass
         
@@ -148,13 +168,12 @@ if __name__ == "__main__":
     R = int(tempR)
     B_list = []
     A_list = []
-    City = Grid(H, W, A_list, B_list)
     for i in range(N):
         x, y, latency, connection_weight = f.readline().rsplit()
-        B_list.append(Building(int(x),int(y),float(latency), float(connection_weight), City))
+        B_list.append(Building(int(x),int(y),float(latency), float(connection_weight)))
     for i in range(M):
         Ar,Ac = f.readline().rsplit()
-        A_list.append(Antenna(float(Ar),float(Ac), City))
+        A_list.append(Antenna(float(Ar),float(Ac)))
     optimise()
     print(score())
     printOutput()
