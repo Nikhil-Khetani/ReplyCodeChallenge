@@ -36,11 +36,12 @@ class Building(object):
         self.y = y
         self.latency = latency
         self.connection_weight = connection_weight
+        self.r = None
 
 class Antenna(object):
     
-    def __init__(self, range, connection_speed):
-        self.range = range
+    def __init__(self, a_range, connection_speed):
+        self.range = a_range
         self.connection_speed = connection_speed
         self.x = None
         self.y = None
@@ -86,15 +87,20 @@ def score():
     return result + reward()
 
 def r(b):
-    
-    global A_list
-    
-    array = []
-    for a in A_list:
-        if dist(a, b) <= a.range:
-            array.append(a)
-    
-    return array
+
+    if b.r == None:
+        global A_list
+        
+        array = []
+        for a in A_list:
+            if dist(a, b) <= a.range:
+                array.append(a)
+
+        b.r = array
+        
+        return array
+    else:
+        return b.r
 
 def s(b, a=None):
     
@@ -126,6 +132,8 @@ def optimise():
     global W
     global H
 
+    
+
 
     old_score = 0
     oldpositions = []
@@ -133,18 +141,27 @@ def optimise():
         i=0
         positions = []
         while i<M:
+            
             xpos = random.randint(0,W)
             ypos = random.randint(0,H)
+            print("position {} {}".format(xpos,ypos))
             if ((xpos,ypos) not in positions):
                 A_list[i].set_coords(xpos,ypos)
-                positions.append((xpos,ypos))
+                positions.append([xpos,ypos])
                 i+=1
-        print(score())
-        if score()>=old_score:
-            old_score = score()
+        print("score to be calc")
+        new_score = score()
+        print(new_score)
+        if (new_score>=old_score):
+            old_score = new_score
             oldpositions = positions
+        
     for i in range(len(oldpositions)):
         A_list[i].set_coords(oldpositions[i][0],oldpositions[i][1])
+    positions = oldpositions
+
+
+
         
     
 
